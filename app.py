@@ -185,10 +185,10 @@ fitur_html = """
 
 <div class="scroll-container">
     <div class="brand-item"><img src="https://akongads.store/images/menu-icon/slot.webp"><br>SLOT</div>
-    <div class="brand-item"><img src="https://i.ibb.co/S769989/pragmatic.png"><br>PRAGMATIC</div>
-    <div class="brand-item"><img src="https://i.ibb.co/0YmYVf8/pgsoft.png"><br>PG SOFT</div>
-    <div class="brand-item"><img src="https://i.ibb.co/XW3px3P/habanero.png"><br>HB</div>
-    <div class="brand-item"><img src="https://i.ibb.co/fM8vXz3/joker.png"><br>JOKER</div>
+    <div class="brand-item"><img src="https://i.ibb.co/S769989/pragmatic.png"><br>CASINO</div>
+    <div class="brand-item"><img src="https://i.ibb.co/0YmYVf8/pgsoft.png"><br>SPORT+</div>
+    <div class="brand-item"><img src="https://i.ibb.co/XW3px3P/habanero.png"><br>TOGEL</div>
+    <div class="brand-item"><img src="https://i.ibb.co/fM8vXz3/joker.png"><br>IKAN</div>
 </div>
 
 <div class="winner-box">
