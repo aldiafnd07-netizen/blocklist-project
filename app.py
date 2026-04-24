@@ -8,7 +8,7 @@ def init_db():
     conn = sqlite3.connect('database_s2.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS users
-                 (username TEXT PRIMARY KEY, password TEXT, email TEXT, telepon TEXT, 
+                 (username TEXT PRIMARY KEY, password TEXT, email TEXT, telepon TEXT,
                   bank TEXT, norek TEXT, narek TEXT, referral TEXT)''')
     conn.commit()
     conn.close()
@@ -21,21 +21,93 @@ def cek_login(u, p):
     conn.close()
     return data
 
+def simpan_pendaftar(u, p, e, t, b, nr, na, ref):
+    try:
+        conn = sqlite3.connect('database_s2.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO users VALUES (?,?,?,?,?,?,?,?)", (u, p, e, t, b, nr, na, ref))
+        conn.commit()
+        conn.close()
+        return True
+    except sqlite3.IntegrityError:
+        return False
+
 init_db()
 
-# --- 2. LOGIKA NAVIGASI MENU (FITUR ANYAR) ---
-if 'menu_aktif' not in st.session_state:
-    st.session_state.menu_aktif = "SLOT"
+# --- 2. LOGIKA STATE & NAVIGASI MENU (ANYAR) ---
+if 'v_code' not in st.session_state:
+    st.session_state.v_code = str(random.randint(1000, 9999))
 
-# Cek upami aya parobahan menu tina URL
-q = st.query_params
-if "m" in q:
-    st.session_state.menu_aktif = q["m"]
+# Néwak menu mana anu diklik tina URL
+m_aktif = st.query_params.get("m", "SLOT")
 
-# --- 3. FITUR HTML & CSS (BANNER, MARQUEE, MENU KLIK) ---
+# --- 3. CSS GLOBAL ---
+st.markdown("""
+<style>
+    header, footer, #MainMenu, .stDeployButton { visibility: hidden !important; display: none !important; }
+    .stApp {
+        background-image: url("https://i.imgur.com/0sCszBw.png");
+        background-attachment: fixed; background-size: cover; background-position: center;
+    }
+    .block-container { padding: 0.5rem !important; padding-bottom: 160px !important; }
+    .stTextInput input { background-color: rgba(26, 29, 36, 0.9) !important; color: #00e676 !important; border: 1px solid #00e676 !important; }
+    div.stButton > button[kind="primary"] {
+        background: linear-gradient(180deg, #00e676 0%, #00c853 100%) !important;
+        color: white !important; font-weight: 800 !important; border: 2px solid #ffd700 !important; border-radius: 12px !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --- 4. FUNGSI DIALOG ---
+@st.dialog("HALAMAN MASUK")
+def login_dialog():
+    u = st.text_input("User Name", key="l_u")
+    p = st.text_input("Kata Sandi", type="password", key="l_p")
+    if st.button("PROSES MASUK", type="primary", use_container_width=True):
+        if cek_login(u, p):
+            st.success(f"✅ Halo {u}, Selamat Bermain!"); st.balloons()
+        else:
+            st.error("⚠️ Akun tidak ditemukan!")
+
+@st.dialog("PENDAFTARAN", width="large")
+def register_dialog():
+    st.markdown("### 📝 DAFTAR AKUN BARU")
+    col1, col2 = st.columns(2)
+    with col1:
+        u = st.text_input("* User Name", key="reg_u")
+        p = st.text_input("* Kata sandi", type="password", key="reg_p")
+        p2 = st.text_input("* Ulang Kata sandi", type="password", key="reg_p2")
+        e = st.text_input("* Email", key="reg_e")
+    with col2:
+        t = st.text_input("* No Telepon", key="reg_t")
+        b = st.selectbox("* Bank", ["BCA", "MANDIRI", "BNI", "BRI", "DANA", "OVO", "GOPAY"])
+        nr = st.text_input("* Nomor Rekening", key="reg_nr")
+        na = st.text_input("* Nama Pemilik Rekening", key="reg_na")
+    ref = st.text_input("Kode Referral (Opsional)", key="reg_ref")
+    st.markdown(f"**Kode Validasi: :red[{st.session_state.v_code}]**")
+    v_in = st.text_input("* Masukkan Kode", key="reg_v")
+    if st.button("DAFTAR SEKARANG", type="primary", use_container_width=True):
+        if p != p2: st.error("❌ Kata sandi tidak cocok!")
+        elif v_in != st.session_state.v_code: st.error("❌ Kode validasi salah!")
+        elif u and p and nr and na:
+            if simpan_pendaftar(u, p, e, t, b, nr, na, ref):
+                st.success("✅ Berhasil! Silakan Login.")
+                st.session_state.v_code = str(random.randint(1000, 9999))
+            else:
+                st.error("⚠️ Username sudah ada!")
+
+# --- 5. TAMPILAN ATAS ---
+c1, c2 = st.columns([2, 1])
+with c1: st.image("https://i.imgur.com/pjj1xQo.png", width=200)
+with c2:
+    if st.button("MASUK", use_container_width=True): login_dialog()
+    if st.button("DAFTAR", use_container_width=True): register_dialog()
+
+# --- 6. FITUR VISUAL ---
 fitur_html = f"""
 <style>
-    .slider {{ display: flex; overflow-x: auto; scroll-snap-type: x mandatory; border-radius: 15px; margin-bottom:10px; }}
+    .slider-container {{ width: 100%; overflow: hidden; border-radius: 15px; margin-bottom:10px; }}
+    .slider {{ display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }}
     .slider::-webkit-scrollbar {{ display: none; }}
     .slider img {{ width: 100%; flex-shrink: 0; scroll-snap-align: start; }}
 
@@ -45,107 +117,138 @@ fitur_html = f"""
         background-size: 400% 400%; animation: rgb-move 5s linear infinite;
     }}
     .inner-marquee {{ background: #1a1d24; border-radius: 8px; padding: 10px; overflow: hidden; }}
-    .scrolling-text {{ display: inline-block; white-space: nowrap; color: #ffd700; font-weight: bold; animation: jalan 15s linear infinite; }}
+    .scrolling-text {{ display: inline-block; white-space: nowrap; color: #ffd700; font-weight: bold; animation: jalan-terus 15s linear infinite; }}
 
-    .scroll-container {{ display: flex; overflow-x: auto; gap: 15px; padding: 15px 5px; background: rgba(0,0,0,0.5); border-radius: 10px; }}
+    .scroll-container {{
+        display: flex; overflow-x: auto; white-space: nowrap; gap: 15px; padding: 15px 5px; 
+        background: rgba(0,0,0,0.5); border-radius: 10px; margin-top:10px;
+    }}
     .scroll-container::-webkit-scrollbar {{ display: none; }}
     .brand-item {{ flex: 0 0 auto; width: 70px; text-align: center; color: #ffd700; font-size: 10px; font-weight: bold; cursor: pointer; }}
     .brand-item img {{ width: 55px; height: 55px; border-radius: 50%; border: 2px solid #ffd700; background: #222; }}
-    .active img {{ border-color: #00ff00; box-shadow: 0 0 10px #2ecc71; }}
+    .active img {{ border-color: #00ff00; box-shadow: 0 0 10px #00ff00; }}
+
+    .winner-box {{ background: rgba(26, 29, 36, 0.95); border-radius: 12px; border: 1px solid #333; padding: 10px; margin-top:10px; }}
+    .win-content {{ display: flex; justify-content: space-between; color: white; font-size: 10px; margin-top: 5px; }}
+    .jp-wrapper {{ margin-top: 10px; background: #000; border: 2px solid #ffd700; border-radius: 10px; padding: 10px; text-align: center; }}
+    .jp-num {{ color: #ff0000; font-size: 24px; font-weight: 900; }}
 
     @keyframes rgb-move {{ 0%{{background-position:0% 50%}} 100%{{background-position:100% 50%}} }}
-    @keyframes jalan {{ from {{ transform: translateX(100%); }} to {{ transform: translateX(-100%); }} }}
+    @keyframes jalan-terus {{ from {{ transform: translateX(100%); }} to {{ transform: translateX(-100%); }} }}
 </style>
 
-<div class="slider">
-    <img src="https://i.imgur.com/vUeCcl3.png">
-    <img src="https://i.imgur.com/kek6NF4.png">
+<div class="slider-container">
+    <div class="slider" id="mainSlider">
+        <img src="https://i.imgur.com/IA1m2GF.png">
+        <img src="https://i.imgur.com/vUeCcl3.png">
+        <img src="https://i.imgur.com/kek6NF4.png">
+    </div>
 </div>
 
 <div class="rgb-border">
-    <div class="inner-marquee"><div class="scrolling-text">🔥 SELAMAT DATANG DI S2 SEJATI SLOT - SITUS GACOR TERPERCAYA 🔥</div></div>
+    <div class="inner-marquee"><div class="scrolling-text">🔥 SELAMAT DATANG DI S2 SEJATI SLOT - PROSES DEPO & WD TERCEPAT! 🔥</div></div>
 </div>
 
 <div class="scroll-container">
-    <div class="brand-item {'active' if st.session_state.menu_aktif == 'SLOT' else ''}" onclick="window.parent.location.href='?m=SLOT'">
+    <div class="brand-item {'active' if m_aktif == 'SLOT' else ''}" onclick="window.parent.location.href='?m=SLOT'">
         <img src="https://akongads.store/images/menu-icon/slot.webp"><br>SLOT
     </div>
-    <div class="brand-item {'active' if st.session_state.menu_aktif == 'CASINO' else ''}" onclick="window.parent.location.href='?m=CASINO'">
-        <img src="https://i.ibb.co/S769989/pragmatic.png"><br>CASINO
+    <div class="brand-item {'active' if m_aktif == 'CASINO' else ''}" onclick="window.parent.location.href='?m=CASINO'">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Pragmatic_Play_logo.png/640px-Pragmatic_Play_logo.png"><br>CASINO
     </div>
-    <div class="brand-item {'active' if st.session_state.menu_aktif == 'SPORT' else ''}" onclick="window.parent.location.href='?m=SPORT'">
-        <img src="https://i.ibb.co/0YmYVf8/pgsoft.png"><br>SPORT+
+    <div class="brand-item {'active' if m_aktif == 'SPORT' else ''}" onclick="window.parent.location.href='?m=SPORT'">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_x_q8hZ68o2fIuN7VlZ1t2H6Y-f5K6-r-wA&s"><br>SPORT+
     </div>
-    <div class="brand-item {'active' if st.session_state.menu_aktif == 'TOGEL' else ''}" onclick="window.parent.location.href='?m=TOGEL'">
-        <img src="https://i.ibb.co/XW3px3P/habanero.png"><br>TOGEL
+    <div class="brand-item {'active' if m_aktif == 'TOGEL' else ''}" onclick="window.parent.location.href='?m=TOGEL'">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0R_B8n1lG4_u7yS6Wv3U4J_Y_6rB8v8_oOA&s"><br>TOGEL
     </div>
-    <div class="brand-item {'active' if st.session_state.menu_aktif == 'IKAN' else ''}" onclick="window.parent.location.href='?m=IKAN'">
-        <img src="https://i.ibb.co/fM8vXz3/joker.png"><br>IKAN
+    <div class="brand-item {'active' if m_aktif == 'IKAN' else ''}" onclick="window.parent.location.href='?m=IKAN'">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz7z_p8H-vM-0_Zz_kZ5-9-r_S6r_6-v_9_w&s"><br>IKAN
     </div>
 </div>
+
+<div class="winner-box">
+    <div style="color:#ffd700; font-size:11px; font-weight:bold; border-bottom:1px solid #333; padding-bottom:5px;">🏆 LIVE WINNER REAL-TIME</div>
+    <div class="win-content">
+        <span id="u-win">Memuat...</span>
+        <span id="g-win" style="color:#ffd700;"></span>
+        <span id="a-win" style="color:#00e676; font-weight:bold;"></span>
+    </div>
+</div>
+
+<div class="jp-wrapper">
+    <div style="color:#ffd700; font-size:10px; font-weight:bold;">✨ PROGRESSIVE JACKPOT ✨</div>
+    <div class="jp-num">RP <span id="jp-val">8.715.784.119</span></div>
+</div>
+
+<script>
+    let sIdx = 0; setInterval(() => {{ sIdx = (sIdx + 1) % 3; document.getElementById('mainSlider').scrollTo({{left: sIdx * document.getElementById('mainSlider').clientWidth, behavior: 'smooth'}}); }}, 3000);
+    const us = ["J***p", "R***ky", "S2***ot", "A***ng", "M***ky"];
+    const gs = ["Olympus", "Mahjong 2", "Princess"];
+    setInterval(() => {{
+        document.getElementById('u-win').innerText = us[Math.floor(Math.random()*us.length)];
+        document.getElementById('g-win').innerText = "[" + gs[Math.floor(Math.random()*gs.length)] + "]";
+        document.getElementById('a-win').innerText = "IDR " + (Math.floor(Math.random()*5000)+100) + ".000";
+    }}, 3000);
+    let jVal = 8715784119; setInterval(() => {{ jVal += Math.floor(Math.random()*5000); document.getElementById('jp-val').innerText = jVal.toLocaleString('id-ID'); }}, 100);
+</script>
 """
-components.html(fitur_html, height=380)
+components.html(fitur_html, height=520)
 
-# --- 4. DATA GAME DUMASAR MENU (SCROLL GAMBAR GAME) ---
-st.subheader(f"🎮 {st.session_state.menu_aktif} GAMES")
+# --- 7. TAMPILAN GAME BERDASARKAN MENU (SCROLL GAMBAR GAME) ---
+st.markdown(f"#### 🎮 KUMPULAN GAME: {m_aktif}")
 
-game_list = {
+game_data = {
     "SLOT": [
-        {"n": "Pragmatic", "img": "https://i.ibb.co/S769989/pragmatic.png"},
-        {"n": "PG Soft", "img": "https://i.ibb.co/0YmYVf8/pgsoft.png"},
-        {"n": "Habanero", "img": "https://i.ibb.co/XW3px3P/habanero.png"},
-        {"n": "Microgame", "img": "https://i.ibb.co/fM8vXz3/joker.png"},
-        {"n": "CQ9", "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzR_eYp-o6T-0W-KqS-6Q6W_U&s"}
+        {"n": "Pragmatic", "i": "https://i.ibb.co/S769989/pragmatic.png"},
+        {"n": "PG Soft", "i": "https://i.ibb.co/0YmYVf8/pgsoft.png"},
+        {"n": "Habanero", "i": "https://i.ibb.co/XW3px3P/habanero.png"},
+        {"n": "Microgame", "i": "https://i.ibb.co/fM8vXz3/joker.png"},
+        {"n": "5Gaming", "i": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_X_Y_Z_I_O_P_Q_R&s"}
     ],
     "CASINO": [
-        {"n": "Baccarat", "img": "https://i.ibb.co/S769989/pragmatic.png"},
-        {"n": "Roulette", "img": "https://i.ibb.co/0YmYVf8/pgsoft.png"}
+        {"n": "Sexy Casino", "i": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Pragmatic_Play_logo.png/640px-Pragmatic_Play_logo.png"},
+        {"n": "Evolution", "i": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0R_B8n1lG4_u7yS6Wv3U4J_Y_6rB8v8_oOA&s"}
     ],
     "TOGEL": [
-        {"n": "HK", "img": "https://i.ibb.co/XW3px3P/habanero.png"},
-        {"n": "SGP", "img": "https://i.ibb.co/fM8vXz3/joker.png"}
+        {"n": "HK", "i": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0R_B8n1lG4_u7yS6Wv3U4J_Y_6rB8v8_oOA&s"},
+        {"n": "SGP", "i": "https://akongads.store/images/menu-icon/slot.webp"}
     ]
 }
 
-current_games = game_list.get(st.session_state.menu_aktif, game_list["SLOT"])
-
-# Fitur Scroll Game Gambar (Otomatis & Manual)
-scroll_js = f"""
-<div style="display: flex; overflow-x: auto; gap: 10px; padding: 10px; background: #000; border-radius: 10px;">
+current_games = game_data.get(m_aktif, game_data["SLOT"])
+game_scroll_html = f"""
+<div style="display: flex; overflow-x: auto; gap: 12px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 12px;">
     {''.join([f'''
-        <div style="flex: 0 0 auto; width: 110px; text-align: center;">
-            <img src="{g['img']}" style="width: 100px; height: 100px; border-radius: 12px; border: 2px solid #ffd700;">
-            <p style="color: white; font-size: 10px; margin-top: 5px;">{g['n']}</p>
+        <div style="flex: 0 0 auto; width: 110px; text-align: center; color: white;">
+            <img src="{g['i']}" style="width: 100%; border-radius: 12px; border: 2px solid #ffd700; background: #1a1d24;">
+            <p style="font-size: 10px; margin-top: 5px; font-weight: bold;">{g['n']}</p>
         </div>
     ''' for g in current_games])}
 </div>
 """
-components.html(scroll_js, height=160)
+components.html(game_scroll_html, height=160)
 
-# --- 5. INPUT LOGIN (FITUR ASLI) ---
-st.markdown("### 🔐 LOGIN UTAMA")
-u_name = st.text_input("Username", key="m_u")
-p_word = st.text_input("Password", type="password", key="m_p")
+# --- 8. INPUT LOGIN ---
+st.markdown("### 🔑 LOGIN UTAMA")
+st.text_input("Username", key="main_u")
+st.text_input("Password", type="password", key="main_p")
+st.button("MASUK SEKARANG", type="primary", use_container_width=True)
 
-if st.button("MASUK SEKARANG", type="primary", use_container_width=True):
-    user = cek_login(u_name, p_word)
-    if user:
-        st.success(f"Selamat Datang {u_name}!")
-    else:
-        st.error("Username/Password Salah!")
-
-# --- 6. NAVBAR BAWAH ---
+# --- 9. NAVIGASI BAR BAWAH ---
 st.markdown("""
 <style>
-    .nav-bawah { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 10px; border-top: 2px solid #ffd700; z-index: 999; }
-    .nav-item { text-align: center; color: white; font-size: 10px; text-decoration: none; }
+    .nav-container { position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; background: #111; display: flex; justify-content: space-around; align-items: center; border-top: 2px solid #ffd700; z-index: 9999; }
+    .floating-center { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 75px; height: 75px; background: linear-gradient(180deg, #ffd700, #b8860b); border-radius: 50%; border: 4px solid #111; display: flex; justify-content: center; align-items: center; z-index: 10000; box-shadow: 0 0 15px #ffd700; cursor: pointer; }
+    .nav-link { text-align: center; color: white; text-decoration: none; width: 20%; font-size: 10px; }
 </style>
-<div class="nav-bawah">
-    <a href="/" class="nav-item">🏠<br>HOME</a>
-    <a href="#" class="nav-item">🎁<br>PROMO</a>
-    <a href="#" class="nav-item" style="color:#ffd700; font-weight:bold;">💰<br>DEPOSIT</a>
-    <a href="#" class="nav-item">💬<br>CHAT</a>
-    <a href="#" class="nav-item">👤<br>AKUN</a>
+<div class="floating-center" onclick="window.parent.location.reload();"><b style="color:black; font-size:11px;">MASUK</b></div>
+<div class="nav-container">
+    <div class="nav-link">🏠<br>HOME</div>
+    <div class="nav-link">🎁<br>PROMO</div>
+    <div style="width: 20%;"></div>
+    <div class="nav-link">📲<br>APK</div>
+    <div class="nav-link">💬<br>CHAT</div>
 </div>
 """, unsafe_allow_html=True)
 
