@@ -280,18 +280,3 @@ st.markdown("""
     <div class="nav-link">💬<br>CHAT</div>
 </div>
 """, unsafe_allow_html=True)
-
- User IP: 2a09:bac5:55f8:25d7::3c5:32
-Trace ID: d781c95a-81ef-4b0f-8ae3-fc03c7f38c69
-      UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36
-  Result:
-37F413C8(200 | 200 | 403,403,403)
-FF2B1948(200 | 200 | 403,403,403)
-EC138861(200 | 200 | 403,403,403)
-24CC82E1(200 | 200 | 403,403,403)
-271153FF(200 | 200 | 403,403,403)
-EFCE597F(200 | 200 | 403,403,403)
-8052BC00(200 | 200 | 403,403,403)
-488DB680(200 | 200 | 403,403,403)
-CA1FD31A(200 | 200 | 403,403,403)
-02C0D99A(200 | 200 | 403,403,403)
