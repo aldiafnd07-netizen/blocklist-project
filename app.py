@@ -226,7 +226,7 @@ st.text_input("Username", key="main_u")
 st.text_input("Password", type="password", key="main_p")
 st.button("MASUK SEKARANG", type="primary", use_container_width=True)
 
-# --- 9. NAVIGASI BAWAH + POPUP LIVE CHAT ---
+# --- 9. NAVIGASI BAWAH + POPUP LIVE CHAT (FIXED) ---
 st.markdown("""
 <style>
     /* 1. Tombol Chat Melayang (Biru) */
@@ -245,12 +245,12 @@ st.markdown("""
         z-index: 10002;
     }
 
-    /* 3. Kotak Popup */
+    /* 3. Kotak Popup S2 SEJATI */
     #kotak-popup-s2 {
         display: none; position: fixed; top: 50%; left: 50%;
         transform: translate(-50%, -50%); width: 320px;
         background: #1a1a1a; border-radius: 15px;
-        overflow: hidden; z-index: 10003; border: 1px solid #ffd700;
+        overflow: hidden; z-index: 10003; border: 2px solid #ffd700;
     }
 
     .link-sosmed {
@@ -277,7 +277,7 @@ st.markdown("""
         justify-content: center; align-items: center; z-index: 10000; 
         box-shadow: 0 0 15px #ffd700; cursor: pointer; 
     }
-    .nav-link { text-align: center; color: white; text-decoration: none; width: 20%; font-size: 10px; }
+    .nav-link { text-align: center; color: white; text-decoration: none; width: 20%; font-size: 10px; cursor: pointer; }
 </style>
 
 <div id="btn-chat-s2" onclick="openChatS2()">
@@ -291,7 +291,7 @@ st.markdown("""
         <span>👤 CUSTOMER SERVICE</span>
         <span onclick="closeChatS2()" style="cursor:pointer; font-size: 28px; line-height: 20px;">&times;</span>
     </div>
-    <img src="https://i.imgur.com/hubungi-kami.jpeg" style="width: 100%; display: block; border-bottom: 2px solid #ffd700;">
+    <img src="https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/8501f28f-3d3c-4440-8af2-b9a41789e2e6.jpg" style="width: 100%; display: block; border-bottom: 2px solid #ffd700;">
     <div style="background: #1a1a1a;">
         <a href="https://wa.me/6285781785177" target="_blank" class="link-sosmed">
             <span>🟢 WhatsApp</span><span class="tombol-klik">Klik Disini</span>
@@ -305,7 +305,9 @@ st.markdown("""
     </div>
 </div>
 
-<div class="floating-center" onclick="window.parent.location.reload();"><b style="color:black; font-size:11px;">MASUK</b></div>
+<div class="floating-center" onclick="window.parent.location.reload();">
+    <b style="color:black; font-size:11px;">MASUK</b>
+</div>
 <div class="nav-container">
     <div class="nav-link" onclick="window.parent.location.reload();">🏠<br>HOME</div>
     <div class="nav-link">🎁<br>PROMO</div>
@@ -325,3 +327,4 @@ st.markdown("""
     }
 </script>
 """, unsafe_allow_html=True)
+
