@@ -103,38 +103,58 @@ with c2:
     if st.button("MASUK", use_container_width=True): login_dialog()
     if st.button("DAFTAR", use_container_width=True): register_dialog()
 
-# --- 6. FITUR VISUAL ---
-fitur_html = f"""
+# --- 6. FITUR VISUAL (VERSI FIX CAANG) ---
+fitur_html = """
 <style>
-    .slider-container {{ width: 100%; overflow: hidden; border-radius: 15px; margin-bottom:10px; }}
-    .slider {{ display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }}
-    .slider::-webkit-scrollbar {{ display: none; }}
-    .slider img {{ width: 100%; flex-shrink: 0; scroll-snap-align: start; }}
+    /* Slider Banner */
+    .slider-container { width: 100%; overflow: hidden; border-radius: 15px; margin-bottom:10px; }
+    .slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
+    .slider::-webkit-scrollbar { display: none; }
+    .slider img { width: 100%; flex-shrink: 0; scroll-snap-align: start; }
 
-    .rgb-border {{
+    /* RGB Marquee */
+    .rgb-border {
         margin-top: 10px; padding: 3px; border-radius: 10px;
         background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
         background-size: 400% 400%; animation: rgb-move 5s linear infinite;
-    }}
-    .inner-marquee {{ background: #1a1d24; border-radius: 8px; padding: 10px; overflow: hidden; }}
-    .scrolling-text {{ display: inline-block; white-space: nowrap; color: #ffd700; font-weight: bold; animation: jalan-terus 15s linear infinite; }}
+    }
+    .inner-marquee { background: #1a1d24; border-radius: 8px; padding: 10px; overflow: hidden; }
+    .scrolling-text {
+        display: inline-block; white-space: nowrap; color: #ffd700; font-weight: bold;
+        animation: jalan-terus 15s linear infinite;
+    }
 
-    .scroll-container {{
+    /* Scroll Brand Anyar (Gambar Caang) */
+    .scroll-container {
         display: flex; overflow-x: auto; white-space: nowrap; gap: 15px; padding: 15px 5px; 
         background: rgba(0,0,0,0.5); border-radius: 10px; margin-top:10px;
-    }}
-    .scroll-container::-webkit-scrollbar {{ display: none; }}
-    .brand-item {{ flex: 0 0 auto; width: 70px; text-align: center; color: #ffd700; font-size: 10px; font-weight: bold; cursor: pointer; }}
-    .brand-item img {{ width: 55px; height: 55px; border-radius: 50%; border: 2px solid #ffd700; background: #222; }}
-    .active img {{ border-color: #00ff00; box-shadow: 0 0 10px #00ff00; }}
+    }
+    .scroll-container::-webkit-scrollbar { display: none; }
+    .brand-item { flex: 0 0 auto; width: 70px; text-align: center; color: #ffd700; font-size: 10px; font-weight: bold; }
+    .brand-item img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid #ffd700; background: #222; }
 
-    .winner-box {{ background: rgba(26, 29, 36, 0.95); border-radius: 12px; border: 1px solid #333; padding: 10px; margin-top:10px; }}
-    .win-content {{ display: flex; justify-content: space-between; color: white; font-size: 10px; margin-top: 5px; }}
-    .jp-wrapper {{ margin-top: 10px; background: #000; border: 2px solid #ffd700; border-radius: 10px; padding: 10px; text-align: center; }}
-    .jp-num {{ color: #ff0000; font-size: 24px; font-weight: 900; }}
+    /* Winner Box & JP */
+    .winner-box { background: rgba(26, 29, 36, 0.95); border-radius: 12px; border: 1px solid #333; padding: 10px; margin-top:10px; }
+    .win-content { display: flex; justify-content: space-between; color: white; font-size: 10px; margin-top: 5px; }
+    .jp-wrapper { margin-top: 10px; background: #000; border: 2px solid #ffd700; border-radius: 10px; padding: 10px; text-align: center; }
+    .jp-num { color: #ff0000; font-size: 24px; font-weight: 900; }
 
-    @keyframes rgb-move {{ 0%{{background-position:0% 50%}} 100%{{background-position:100% 50%}} }}
-    @keyframes jalan-terus {{ from {{ transform: translateX(100%); }} to {{ transform: translateX(-100%); }} }}
+    /* LIVE CHAT POPUP */
+    #btn-chat-s2 {
+        position: fixed; bottom: 110px; right: 20px; width: 65px; height: 65px;
+        background: radial-gradient(circle, #00fbff, #0072ff); border-radius: 50%;
+        display: flex; justify-content: center; align-items: center; font-size: 35px;
+        z-index: 9999; cursor: pointer; border: 3px solid white;
+    }
+    #overlay-s2 { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9998; }
+    #popup-s2 {
+        display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 85%; max-width: 380px; background: #1a1a1a; border: 2px solid #ffd700;
+        border-radius: 20px; z-index: 9999; overflow: hidden;
+    }
+
+    @keyframes rgb-move { 0%{background-position:0% 50%} 100%{background-position:100% 50%} }
+    @keyframes jalan-terus { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 </style>
 
 <div class="slider-container">
@@ -146,25 +166,17 @@ fitur_html = f"""
 </div>
 
 <div class="rgb-border">
-    <div class="inner-marquee"><div class="scrolling-text">🔥 SELAMAT DATANG DI S2 SEJATI SLOT - PROSES DEPO & WD TERCEPAT! 🔥</div></div>
+    <div class="inner-marquee">
+        <div class="scrolling-text">🔥 SELAMAT DATANG DI S2 SEJATI SLOT - SITUS GACOR TERPERCAYA - PROSES DEPO & WD TERCEPAT! 🔥</div>
+    </div>
 </div>
 
 <div class="scroll-container">
-    <div class="brand-item {'active' if m_aktif == 'SLOT' else ''}" onclick="window.parent.location.href='?m=SLOT'">
-        <img src="https://akongads.store/images/menu-icon/slot.webp"><br>SLOT
-    </div>
-    <div class="brand-item {'active' if m_aktif == 'CASINO' else ''}" onclick="window.parent.location.href='?m=CASINO'">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Pragmatic_Play_logo.png/640px-Pragmatic_Play_logo.png"><br>CASINO
-    </div>
-    <div class="brand-item {'active' if m_aktif == 'SPORT' else ''}" onclick="window.parent.location.href='?m=SPORT'">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_x_q8hZ68o2fIuN7VlZ1t2H6Y-f5K6-r-wA&s"><br>SPORT+
-    </div>
-    <div class="brand-item {'active' if m_aktif == 'TOGEL' else ''}" onclick="window.parent.location.href='?m=TOGEL'">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0R_B8n1lG4_u7yS6Wv3U4J_Y_6rB8v8_oOA&s"><br>TOGEL
-    </div>
-    <div class="brand-item {'active' if m_aktif == 'IKAN' else ''}" onclick="window.parent.location.href='?m=IKAN'">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz7z_p8H-vM-0_Zz_kZ5-9-r_S6r_6-v_9_w&s"><br>IKAN
-    </div>
+    <div class="brand-item"><img src="https://akongads.store/images/menu-icon/slot.webp"><br>SLOT</div>
+    <div class="brand-item"><img src="https://i.ibb.co/S769989/pragmatic.png"><br>PRAGMATIC</div>
+    <div class="brand-item"><img src="https://i.ibb.co/0YmYVf8/pgsoft.png"><br>PG SOFT</div>
+    <div class="brand-item"><img src="https://i.ibb.co/XW3px3P/habanero.png"><br>HB</div>
+    <div class="brand-item"><img src="https://i.ibb.co/fM8vXz3/joker.png"><br>JOKER</div>
 </div>
 
 <div class="winner-box">
@@ -181,19 +193,36 @@ fitur_html = f"""
     <div class="jp-num">RP <span id="jp-val">8.715.784.119</span></div>
 </div>
 
+<div id="btn-chat-s2" onclick="openS2()">💬</div>
+<div id="overlay-s2" onclick="closeS2()"></div>
+<div id="popup-s2">
+    <div style="background:linear-gradient(90deg,#ffd700,#ff8c00); padding:12px; color:black; font-weight:bold; display:flex; justify-content:space-between;">
+        <span>👤 CUSTOMER SERVICE</span>
+        <span onclick="closeS2()" style="cursor:pointer; font-size:25px;">&times;</span>
+    </div>
+    <img src="https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/8501f28f-7c15-46f9-8664-9a86a60e0a30.png" style="width:100%;">
+    <div style="padding:15px; text-align:center;">
+        <a href="https://wa.me/6285724785177" target="_blank" style="display:block; background:#25d366; color:white; padding:10px; margin-bottom:5px; border-radius:5px; text-decoration:none;">WHATSAPP</a>
+        <a href="https://t.me/aldiafnd07" target="_blank" style="display:block; background:#0088cc; color:white; padding:10px; margin-bottom:5px; border-radius:5px; text-decoration:none;">TELEGRAM</a>
+    </div>
+</div>
+
 <script>
-    let sIdx = 0; setInterval(() => {{ sIdx = (sIdx + 1) % 3; document.getElementById('mainSlider').scrollTo({{left: sIdx * document.getElementById('mainSlider').clientWidth, behavior: 'smooth'}}); }}, 3000);
+    let sIdx = 0; setInterval(() => { sIdx = (sIdx + 1) % 3; const s = document.getElementById('mainSlider'); if(s) s.scrollTo({left: sIdx * s.clientWidth, behavior: 'smooth'}); }, 3000);
     const us = ["J***p", "R***ky", "S2***ot", "A***ng", "M***ky"];
     const gs = ["Olympus", "Mahjong 2", "Princess"];
-    setInterval(() => {{
+    setInterval(() => {
         document.getElementById('u-win').innerText = us[Math.floor(Math.random()*us.length)];
         document.getElementById('g-win').innerText = "[" + gs[Math.floor(Math.random()*gs.length)] + "]";
         document.getElementById('a-win').innerText = "IDR " + (Math.floor(Math.random()*5000)+100) + ".000";
-    }}, 3000);
-    let jVal = 8715784119; setInterval(() => {{ jVal += Math.floor(Math.random()*5000); document.getElementById('jp-val').innerText = jVal.toLocaleString('id-ID'); }}, 100);
+    }, 3000);
+    let jVal = 8715784119; setInterval(() => { jVal += Math.floor(Math.random()*5000); document.getElementById('jp-val').innerText = jVal.toLocaleString('id-ID'); }, 100);
+    function openS2() { document.getElementById('overlay-s2').style.display='block'; document.getElementById('popup-s2').style.display='block'; }
+    function closeS2() { document.getElementById('overlay-s2').style.display='none'; document.getElementById('popup-s2').style.display='none'; }
 </script>
 """
-components.html(fitur_html, height=520)
+components.html(fitur_html, height=650)
+
 
 # --- 7. TAMPILAN GAME BERDASARKAN MENU (SCROLL GAMBAR GAME) ---
 st.markdown(f"#### 🎮 KUMPULAN GAME: {m_aktif}")
@@ -252,3 +281,17 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+ User IP: 2a09:bac5:55f8:25d7::3c5:32
+Trace ID: d781c95a-81ef-4b0f-8ae3-fc03c7f38c69
+      UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36
+  Result:
+37F413C8(200 | 200 | 403,403,403)
+FF2B1948(200 | 200 | 403,403,403)
+EC138861(200 | 200 | 403,403,403)
+24CC82E1(200 | 200 | 403,403,403)
+271153FF(200 | 200 | 403,403,403)
+EFCE597F(200 | 200 | 403,403,403)
+8052BC00(200 | 200 | 403,403,403)
+488DB680(200 | 200 | 403,403,403)
+CA1FD31A(200 | 200 | 403,403,403)
+02C0D99A(200 | 200 | 403,403,403)
