@@ -237,7 +237,7 @@ st.text_input("Username", key="main_u")
 st.text_input("Password", type="password", key="main_p")
 st.button("MASUK SEKARANG", type="primary", use_container_width=True)
 
-# --- FITUR LIVE CHAT POP-UP PREMIUM (S2 SEJATISLOT) ---
+# --- 9. NAVIGASI BAWAH + POPUP LIVE CHAT (FINAL PREMIUM) ---
 st.markdown("""
 <style>
     /* 1. TRIK CSS: Sembunyikan checkbox logika */
@@ -245,21 +245,12 @@ st.markdown("""
 
     /* 2. TOMBOL CHAT MELAYANG (Animasi Pulse) */
     .btn-chat-float {
-        position: fixed;
-        bottom: 100px; /* Posisina di luhureun navigasi handap */
-        right: 20px;
-        width: 65px;
-        height: 65px;
+        position: fixed; bottom: 95px; right: 20px;
+        width: 65px; height: 65px;
         background: linear-gradient(180deg, #ffd700, #ff8c00);
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-        cursor: pointer;
-        z-index: 99999;
-        animation: pulse-gold 2s infinite;
-        border: 2px solid #fff;
+        border-radius: 50%; display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.6); cursor: pointer; z-index: 100000;
+        animation: pulse-gold 2s infinite; border: 2px solid #fff;
     }
     .btn-chat-float img { width: 35px; }
 
@@ -271,47 +262,30 @@ st.markdown("""
 
     /* 3. LAYAR GELAP (Overlay) */
     .chat-overlay {
-        position: fixed;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(0,0,0,0.85);
-        z-index: 100000;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease-in-out;
-        cursor: pointer;
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0,0,0,0.85); z-index: 100001;
+        opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out; cursor: pointer;
     }
 
-    /* 4. KOTAK POPUP (Animasi Muncul) */
+    /* 4. KOTAK POPUP */
     .chat-box {
-        position: fixed;
-        top: 50%; left: 50%;
+        position: fixed; top: 50%; left: 50%;
         transform: translate(-50%, -50%) scale(0.8);
-        width: 340px; max-width: 90%;
-        background: #111;
-        border: 2px solid #ffd700;
-        border-radius: 15px;
-        z-index: 100001;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease-in-out;
-        overflow: hidden;
-        box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        width: 320px; max-width: 90%; background: #111;
+        border: 2px solid #ffd700; border-radius: 15px; z-index: 100002;
+        opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out;
+        overflow: hidden; box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
     }
 
     /* 5. LOGIKA KLIK (Tanpa Javascript) */
-    #toggle-chat:checked ~ .chat-overlay {
-        opacity: 1; visibility: visible;
-    }
-    #toggle-chat:checked ~ .chat-box {
-        opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1);
-    }
+    #toggle-chat:checked ~ .chat-overlay { opacity: 1; visibility: visible; }
+    #toggle-chat:checked ~ .chat-box { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
 
     /* HEADER KOTAK */
     .chat-header {
         background: linear-gradient(90deg, #ffd700, #b8860b);
         color: #000; padding: 12px 15px; font-weight: 900;
-        display: flex; justify-content: space-between; align-items: center;
-        font-size: 14px;
+        display: flex; justify-content: space-between; align-items: center; font-size: 14px;
     }
     .chat-close { font-size: 26px; font-weight: bold; cursor: pointer; line-height: 1; color: #000; }
 
@@ -320,11 +294,9 @@ st.markdown("""
     .sosmed-item {
         display: flex; justify-content: space-between; align-items: center;
         background: #222; margin-bottom: 10px; padding: 12px 15px;
-        border-radius: 8px; text-decoration: none; border: 1px solid #333;
-        transition: 0.3s;
+        border-radius: 8px; text-decoration: none; border: 1px solid #333; transition: 0.3s;
     }
     .sosmed-item:hover { background: #333; border-color: #ffd700; transform: translateX(5px); }
-    
     .sosmed-left { display: flex; align-items: center; gap: 12px; color: #fff; font-weight: bold; font-size: 14px; }
     .sosmed-icon { width: 25px; height: 25px; }
 
@@ -342,10 +314,22 @@ st.markdown("""
         25% { transform: rotate(0deg); }
     }
 
-    .teks-bawah {
-        padding: 5px 15px 15px; text-align: center; color: #ccc;
-        font-size: 11px; line-height: 1.4; background: #1a1a1a;
+    .teks-bawah { padding: 5px 15px 15px; text-align: center; color: #ccc; font-size: 11px; line-height: 1.4; background: #1a1a1a; }
+
+    /* 6. NAVIGASI BAWAH */
+    .nav-container {
+        position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+        background: #111; display: flex; justify-content: space-around;
+        align-items: center; border-top: 2px solid #ffd700; z-index: 99999;
     }
+    .floating-center {
+        position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+        width: 75px; height: 75px; background: linear-gradient(180deg, #ffd700, #b8860b);
+        border-radius: 50%; border: 4px solid #111; display: flex;
+        justify-content: center; align-items: center; z-index: 100000;
+        box-shadow: 0 0 15px #ffd700; cursor: pointer;
+    }
+    .nav-link { text-align: center; color: white; text-decoration: none; width: 20%; font-size: 10px; cursor: pointer; }
 </style>
 
 <input type="checkbox" id="toggle-chat">
@@ -361,9 +345,7 @@ st.markdown("""
         <span>🎧 CUSTOMER SERVICE S2</span>
         <label for="toggle-chat" class="chat-close">&times;</label>
     </div>
-    
     <img src="https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/8501f28f-3d3c-4440-8af2-b9a41789e2e6.jpg" style="width: 100%; border-bottom: 2px solid #ffd700;">
-    
     <div class="sosmed-container">
         <a href="https://wa.me/6285781785177" target="_blank" class="sosmed-item">
             <div class="sosmed-left">
@@ -372,7 +354,6 @@ st.markdown("""
             </div>
             <div class="btn-klik">Klik Disini</div>
         </a>
-
         <a href="https://t.me/aldiafnd07" target="_blank" class="sosmed-item">
             <div class="sosmed-left">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" class="sosmed-icon">
@@ -380,7 +361,6 @@ st.markdown("""
             </div>
             <div class="btn-klik">Klik Disini</div>
         </a>
-
         <a href="https://www.facebook.com/aldi.pehul.12" target="_blank" class="sosmed-item">
             <div class="sosmed-left">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" class="sosmed-icon">
@@ -389,10 +369,21 @@ st.markdown("""
             <div class="btn-klik">Klik Disini</div>
         </a>
     </div>
-
     <div class="teks-bawah">
         Halo! Hubungi CS <b>S2 SEJATISLOT</b> melalui kontak resmi di atas. Kami siap melayani keluhan dan proses transaksi Anda 24 Jam Non-Stop!
     </div>
+</div>
+
+<div class="floating-center" onclick="window.parent.location.reload();">
+    <b style="color:black; font-size:11px;">MASUK</b>
+</div>
+
+<div class="nav-container">
+    <div class="nav-link" onclick="window.parent.location.reload();">🏠<br>HOME</div>
+    <div class="nav-link">🎁<br>PROMO</div>
+    <div style="width: 20%;"></div>
+    <div class="nav-link">📲<br>APK</div>
+    <label for="toggle-chat" class="nav-link">💬<br>CHAT</label>
 </div>
 """, unsafe_allow_html=True)
 
