@@ -2,6 +2,88 @@ import streamlit as st
 import streamlit.components.v1 as components
 import sqlite3
 import random
+import streamlit as st
+
+# --- 1. SETTING HALAMAN & NAVIGASI ---
+if "halaman" not in st.session_state:
+    st.session_state.halaman = "home"
+
+# Fungsi pindah halaman
+def pindah_halaman(nama_hal):
+    st.session_state.halaman = nama_hal
+    st.rerun()
+
+# --- 2. LOGIKA HALAMAN ---
+if st.session_state.halaman == "home":
+    # --- ISI HALAMAN HOME (Kodingan Akang nu tiasa scroll ka handap) ---
+    st.markdown("### 🏠 HALAMAN UTAMA S2 SEJATISLOT")
+    # ... (Lebetkeun kodingan banner, game, dll di dieu) ...
+
+    # Tombol Chat nu ngarahkeun ka Halaman 2
+    st.markdown("""
+    <style>
+        .float-ai {
+            position: fixed; bottom: 100px; right: 20px;
+            width: 60px; height: 60px; background: #007bff;
+            border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; z-index: 99; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    if st.button("💬", key="btn_ai"):
+        pindah_halaman("chat_ai")
+
+elif st.session_state.halaman == "chat_ai":
+    # --- 3. HALAMAN CHAT AI (MIRIP VIDEO) ---
+    
+    # Tombol Balik ka Home
+    if st.button("⬅️ Balik ka Home"):
+        pindah_halaman("home")
+
+    st.markdown("""
+    <div style="background: #ffd700; padding: 15px; border-radius: 10px 10px 0 0; color: #000; font-weight: bold;">
+        🎧 CS S2 SEJATISLOT (AI Support)
+    </div>
+    <div style="background: #1a1a1a; padding: 15px; border: 1px solid #ffd700; color: #fff; font-size: 13px;">
+        AKONGCUAN LIVECHAT 🔥<br>
+        BONUS NEW MEMBER 100%<br>
+        KHUSUS SLOT JANGAN LUPA KLAIM BOSKU!!
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Form Input User ID (Mirip Video)
+    user_id = st.text_input("USER ID *", placeholder="S2sejatislot")
+    
+    # Checkbox Masalah (Mirip Video)
+    st.write("Masalah apa yang perlu kita bantu bosku? *")
+    st.checkbox("PROSES DEPOSIT")
+    st.checkbox("PROSES WITHDRAW")
+    st.checkbox("KLAIM BONUS FREESPIN")
+    st.checkbox("ERROR PERMAINAN")
+    
+    if st.button("Mulai Obrolan", use_container_width=True):
+        st.success("Nyambungkeun ka AI...")
+
+    # Wadah Chat AI
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    if prompt := st.chat_input("Ketik pesan di sini..."):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        # Jawaban Otomatis
+        response = f"Halo {user_id}, abdi AI S2. Aya nu tiasa dibantos ngeunaan masalah kasebat?"
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        with st.chat_message("assistant"):
+            st.markdown(response)
 
 # --- 1. SISTEM DATABASE ---
 def init_db():
@@ -386,40 +468,4 @@ st.markdown("""
     <label for="toggle-chat" class="nav-link">💬<br>CHAT</label>
 </div>
 """, unsafe_allow_html=True)
-
-# --- 10. FITUR CHATBOT AI SADERHANA ---
-if "pesan_chat" not in st.session_state:
-    st.session_state.pesan_chat = []
-
-def balesan_ai(tanya):
-    tanya = tanya.lower()
-    if "jadwal" in tanya or "gacor" in tanya:
-        return "🔥 Bocoran Gacor dinten ieu: Mahjong Ways 2 (98%) & Gates of Olympus (97%). Gaskeun!"
-    elif "depo" in tanya or "wd" in tanya:
-        return "💰 Proses Depo/WD di S2 SEJATISLOT ngan saukur 1-3 menit, Mang. Amanah pisan!"
-    elif "promo" in tanya or "bonus" in tanya:
-        return "🎁 Aya Bonus New Member 100% sarta Rollingan Mingguan. Cék di menu Promo nya!"
-    else:
-        return "Halo! Abdi AI S2. Aya anu tiasa dibantos? Ketik 'Depo', 'Gacor', atanapi 'Promo'."
-
-# --- 2. TAMPILAN UI CHATBOT ---
-with st.expander("🤖 TANYA AI S2 (CHATBOT)", expanded=False):
-    st.markdown("<small><i>Bot otomatis siap mantuan 24 jam</i></small>", unsafe_allow_html=True)
-    
-    # Wadah obrolan
-    for msg in st.session_state.pesan_chat:
-        with st.chat_message(msg["role"]):
-            st.write(msg["content"])
-
-    # Input pamaké
-    if prompt := st.chat_input("Ketik di dieu..."):
-        st.session_state.pesan_chat.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.write(prompt)
-        
-        # Jawaban AI
-        jawaban = balesan_ai(prompt)
-        st.session_state.pesan_chat.append({"role": "assistant", "content": jawaban})
-        with st.chat_message("assistant"):
-            st.write(jawaban)
 
