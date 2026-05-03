@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S2 SEJATISLOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: sans-serif; margin: 0; padding: 0; }
+        body { background-color: #040914; color: white; overflow-x: hidden; }
+
+        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        #bg-video { width: 100%; height: 100%; object-fit: cover; filter: hue-rotate(180deg); }
+
+        .block-container { max-width: 600px; margin: 0 auto; padding: 15px; padding-bottom: 160px; background-color: rgba(4, 9, 20, 0.7); border-radius: 15px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); min-height: 100vh; }
+
+        /* HEADER: LOGO DI KIRI, TOMBOL DI PALING KANAN ATAS */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 2px solid #0055ff; }
+        .logo-box img { height: 45px; width: auto; object-fit: contain; }
+        .auth-box { display: flex; gap: 6px; align-items: center; }
+
+        .btn-auth { background: linear-gradient(90deg, #0055ff, #00e5ff); color: white; border: 1px solid #00e5ff; padding: 8px 14px; font-weight: bold; border-radius: 8px; cursor: pointer; text-shadow: 0 0 5px rgba(255,255,255,0.5); box-shadow: 0 4px 15px rgba(0,229,255,0.4); transition: 0.3s; font-size: 11px; text-transform: uppercase; }
+        .btn-auth:hover { transform: scale(1.03); background: linear-gradient(90deg, #0077ff, #00ffff); box-shadow: 0 6px 20px rgba(0, 229, 255, 0.7); }
+
+        /* SLIDER BANNER */
+        .s-container { width: 100%; overflow: hidden; border-radius: 15px; border: 2px solid #00e5ff; margin: 15px 0; box-shadow: 0 0 20px rgba(0, 229, 255, 0.4); position: relative; }
+        .s-wrapper { display: flex; scroll-snap-type: x mandatory; scrollbar-width: none; scroll-behavior: smooth; overflow-x: hidden; }
+        .s-wrapper img { width: 100%; flex-shrink: 0; scroll-snap-align: start; min-height: 140px; object-fit: cover; }
+
+        /* MARQUEE */
+        .marquee-rgb { padding: 2px; border-radius: 10px; background: linear-gradient(90deg, #00e5ff, #0055ff, #00e5ff); margin-bottom: 15px; }
+        .m-inner { background: rgba(10, 15, 26, 0.95); border-radius: 8px; padding: 10px; overflow: hidden; }
+        .m-text { white-space: nowrap; display: inline-block; color: #00e5ff; font-weight: bold; animation: jalan 15s linear infinite; font-size: 13px; text-shadow: 0 0 8px #00e5ff; }
+
+        /* JACKPOT */
+        .jp-card { background: linear-gradient(180deg, #050a14, #001122); border: 2px solid #00e5ff; border-radius: 15px; padding: 15px; text-align: center; margin-bottom: 20px; box-shadow: inset 0 0 25px rgba(0, 119, 255, 0.3); }
+        .jp-title { color: #00e5ff; font-family: 'Orbitron', sans-serif; font-size: 16px; letter-spacing: 2px; text-shadow: 0 0 10px #00e5ff; }
+        .jp-text { color: #ffffff; font-size: 28px; font-weight: 900; text-shadow: 0 0 15px #00e5ff; font-family: 'Orbitron', sans-serif; margin-top: 5px; }
+
+        /* GAME LIST & RTP SCROLLER */
+        .rtp-section { margin-bottom: 20px; position: relative; }
+        .rtp-header { color: white; font-weight: bold; margin-bottom: 12px; font-size: 15px; border-left: 4px solid #00e5ff; padding-left: 10px; text-shadow: 0 0 5px #00e5ff; }
+        .rtp-container { display: flex; align-items: center; gap: 5px; }
+        .game-list { display: flex; overflow-x: auto; scrollbar-width: none; gap: 10px; scroll-behavior: smooth; padding: 10px 0; width: 100%; }
+        .game-list::-webkit-scrollbar { display: none; }
+        
+        .game-card { flex: 0 0 125px; background: rgba(10, 15, 26, 0.8); backdrop-filter: blur(5px); border: 1px solid #0055ff; border-radius: 12px; overflow: hidden; text-align: center; cursor: pointer; transition: 0.3s; }
+        .game-card:hover { transform: translateY(-4px) scale(1.04); border-color: #00e5ff; box-shadow: 0 8px 22px rgba(0, 229, 255, 0.5); }
+        .game-card img { width: 100%; height: 105px; object-fit: cover; }
+        .brand-label { font-size: 9px; color: #00e5ff; background: rgba(0,0,0,0.9); padding: 4px 0; font-weight: bold; border-bottom: 1px solid #0055ff; letter-spacing: 1px; }
+        .game-name { font-size: 10px; color: white; padding: 6px; font-weight: bold; height: 35px; display: flex; align-items: center; justify-content: center; line-height: 1.2; text-shadow: 0 0 3px rgba(0,229,255,0.5); }
+        .rtp-label { font-size: 11px; font-weight: 900; color: #00e5ff; background: #020610; padding: 5px 0; border-top: 1px dashed #0055ff; font-family: 'Orbitron', sans-serif; }
+        
+        .btn-rgb { background: #050a14; border: 2px solid #00e5ff; color: white; border-radius: 50%; min-width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 10; flex-shrink: 0; box-shadow: 0 0 12px rgba(0,229,255,0.4); }
+
+        /* DEMO PLAY GRID */
+        .demo-play-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .btn-demo-play { width: 100%; background: linear-gradient(90deg, #0055ff, #00e5ff); color: white; border: 1px solid #00e5ff; border-radius: 10px; padding: 12px; font-weight: bold; cursor: pointer; text-shadow: 0 0 5px rgba(255,255,255,0.5); box-shadow: 0 4px 15px rgba(0, 229, 255, 0.4); transition: 0.3s; }
+        .btn-demo-play:hover { transform: scale(1.02); background: linear-gradient(90deg, #0077ff, #00ffff); box-shadow: 0 6px 20px rgba(0, 229, 255, 0.8); }
+
+        /* MODALS */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; backdrop-filter: blur(5px); }
+        .modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 420px; background: #080c14; border: 2px solid #00e5ff; border-radius: 20px; padding: 20px; box-shadow: 0 0 30px rgba(0, 229, 255, 0.5); }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; color: #00e5ff; font-size: 12px; margin-bottom: 5px; text-shadow: 0 0 3px rgba(0,229,255,0.4); }
+        .form-group input, .form-group select { width: 100%; padding: 10px; background: #0b101a; border: 1px solid #00e5ff; color: #00e5ff; border-radius: 10px; font-size: 14px; box-shadow: inset 0 0 5px rgba(0,229,255,0.2); }
+
+        /* BOTTOM NAVBAR */
+        .nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(5, 10, 20, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; z-index: 9999; border-top: 2px solid #00e5ff; box-shadow: 0 -5px 25px rgba(0, 229, 255, 0.4); }
+        .nav-item { text-align: center; color: white; font-size: 11px; font-weight: bold; width: 20%; cursor: pointer; transition: 0.3s; text-shadow: 0 0 3px rgba(255,255,255,0.3); text-decoration: none; }
+        .nav-item:hover { color: #00e5ff; transform: translateY(-3px); text-shadow: 0 0 10px #00e5ff; }
+        .btn-center { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 75px; height: 75px; background: radial-gradient(circle, #00e5ff, #0055ff); border-radius: 50%; border: 3px solid white; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; z-index: 10000; box-shadow: 0 0 30px rgba(0,229,255,0.7); cursor: pointer; transition: 0.3s; text-decoration: none; }
+        .btn-center:hover { transform: translateX(-50%) scale(1.1); box-shadow: 0 0 40px rgba(0, 229, 255, 1); }
+
+        /* LIVE CHAT */
+        #chat-btn { position: fixed; bottom: 100px; right: 20px; width: 65px; height: 65px; background: radial-gradient(circle, #00e5ff, #0055ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 0 25px rgba(0, 229, 255, 0.7); z-index: 1000; cursor: pointer; animation: bounce 2s infinite; border: 2px solid white; }
+        #chat-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,5,15,0.85); z-index: 2000; backdrop-filter: blur(4px); }
+        #chat-popup { 
+    display: none; 
+    position: fixed; 
+    top: 45%; /* Diubah dari 50% ke 45% agar posisi pop-up lebih naik ke atas */
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    width: 330px; 
+    background: #0a0f1a; 
+    border: 2px solid #00e5ff; 
+    border-radius: 20px; 
+    overflow: hidden; 
+    z-index: 3000; 
+    box-shadow: 0 10px 40px rgba(0, 229, 255, 0.4); 
+}
+
+        .chat-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 15px; color: white; text-decoration: none; border-bottom: 1px solid #003366; transition: 0.3s; }
+        .chat-row:hover { background: #001a33; padding-left: 20px; color: #00e5ff; }
+        .action-btn { background: #00e5ff; color: #000; padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+
+        /* =====================================================================
+        /* CSS POPUP ANIMASI PETIR KUSTOM */
+        /* ===================================================================== */
+        .petir-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 20000;
+            backdrop-filter: blur(8px);
+        }
+        .petir-box {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%; max-width: 380px;
+            background: #050a14;
+            border: 3px solid #00e5ff;
+            border-radius: 20px;
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 0 0 30px #00e5ff, inset 0 0 15px rgba(0, 229, 255, 0.4);
+            animation: guncang 0.4s ease-in-out;
+        }
+        .petir-icon {
+            font-size: 60px;
+            color: #ffea00;
+            text-shadow: 0 0 20px #ffea00, 0 0 40px #ffaa00;
+            animation: kilat 1.5s infinite alternate;
+            margin-bottom: 15px;
+        }
+        .petir-text {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #00e5ff;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        /* Animasi Guncangan saat Pop-up Muncul */
+        @keyframes guncang {
+            0%, 100% { transform: translate(-50%, -50%); }
+            20% { transform: translate(-52%, -48%) rotate(-1deg); }
+            40% { transform: translate(-48%, -52%) rotate(1deg); }
+            60% { transform: translate(-51%, -49%) rotate(-0.5deg); }
+            80% { transform: translate(-49%, -51%) rotate(0.5deg); }
+        }
+
+        /* Animasi Kilatan Petir menyambar */
+        @keyframes kilat {
+            0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 10px #ffea00); }
+            10%, 90% { opacity: 0.8; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 35px #ffea00); }
+        }
+
+        @keyframes jalan { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+    </style>
+</head>
+<body>
+
+    <div id="video-container">
+        <video autoplay loop muted playsinline id="bg-video">
+            <source src="/video_bg" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="block-container">
+        <div class="header">
+            <div class="logo-box">
+                <img src="https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/468998b7-79cf-400a-99f6-bf543ef1eaf2.png" alt="Logo S2">
+            </div>
+            <div class="auth-box">
+                {% if user %}
+                    <span style="color: #00e5ff; font-weight: bold; font-size:12px;">Halo {{ user }}!</span>
+                    <a href="/logout" class="btn-auth" style="text-decoration: none;">KELUAR</a>
+                {% else %}
+                    <button class="btn-auth" onclick="toggleModal('loginModal', true)">MASUK</button>
+                    <button class="btn-auth" onclick="toggleModal('regModal', true)">DAFTAR</button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="s-container">
+            <div class="s-wrapper" id="slider">
+                <img src="https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/bea94658-f4d4-4a1f-931a-bdb91c832753.png" alt="Banner 1">
+                <img src="https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/242988a9-1b0a-4556-9e52-c3fce333cabc.png" alt="Banner 2">
+                <img src="https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/482ef72d-7478-4bb5-90eb-e8cf34a33090.png" alt="Banner 3">
+            </div>
+        </div>
+
+        <div class="marquee-rgb">
+            <div class="m-inner">
+                <div class="m-text">🔥 SELAMAT DATANG DI S2 SEJATI - SITUS GACOR TERPERCAYA DAN RESMI - WD BERAPAPUN PASTI DIBAYAR LUNAS DENGAN CEPAT! - SCATTER HITAM & HOKI MENUNGGU KAMU🔥</div>
+            </div>
+        </div>
+
+        <div class="jp-card">
+            <div class="jp-title">Progres Jackpot</div>
+            <div class="jp-text">RP <span id="jp-val">8.715.820.442</span></div>
+        </div>
+
+        <div class="rtp-section">
+            <div class="rtp-header">🎮 LIVE GAME TERGACOR</div>
+            <div class="rtp-container">
+                <div class="btn-rgb" onclick="scrollGameManual(-142)">&lt;&lt;</div>
+                <div class="game-list" id="gameScroll">
+                    </div>
+                <div class="btn-rgb" onclick="scrollGameManual(142)">&gt;&gt;</div>
+            </div>
+        </div>
+
+        <h3 style="color: #00e5ff; text-align: center; text-shadow: 0 0 10px #00e5ff; margin-top: 15px;">🎮 MAINKAN DEMO SEKARANG</h3>
+        <div class="demo-play-grid">
+            <button class="btn-demo-play" onclick="bukaGame('https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20olympgate&lang=id')">🎰 GATES OF OLYMPUS</button>
+            <button class="btn-demo-play" onclick="bukaGame('https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20starlight&lang=id')">👸 STARLIGHT PRINCESS</button>
+            <button class="btn-demo-play" onclick="bukaGame('https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20fruitsw&lang=id')">🍬 SWEET BONANZA</button>
+            <button class="btn-demo-play" onclick="bukaGame('https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20sugarrush&lang=id')">🐻 SUGAR RUSH</button>
+        </div>
+    </div>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h3 style="color: #00e5ff; text-align: center; margin-bottom: 15px; text-shadow: 0 0 10px #00e5ff;">HALAMAN MASUK</h3>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-demo-play" style="width: 100%; font-size:15px;">PROSES MASUK</button>
+                <button type="button" class="btn-demo-play" style="width: 100%; margin-top: 8px; background:#222; border-color:#444;" onclick="toggleModal('loginModal', false)">BATAL</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="regModal">
+        <div class="modal-content" style="max-width: 440px;">
+            <h3 style="color: #00e5ff; text-align: center; margin-bottom: 15px; text-shadow: 0 0 10px #00e5ff;">📝 DAFTAR AKUN BARU</h3>
+            <form id="regForm">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label>* Username</label>
+                        <input type="text" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>* No Telepon</label>
+                        <input type="text" name="telepon" required>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label>* Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>* Ulangi Password</label>
+                        <input type="password" name="password_confirm" required>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label>* Pilih Bank</label>
+                        <select name="bank">
+                            <option>BCA</option><option>MANDIRI</option><option>BNI</option>
+                            <option>BRI</option><option>DANA</option><option>OVO</option>
+                            <option>GOPAY</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>* Nomor Rekening</label>
+                        <input type="text" name="norek" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>* Nama Rekening</label>
+                    <input type="text" name="narek" required>
+                </div>
+                
+                <p style="color:#00e5ff; font-size:12px; margin-bottom:5px;">Kode Validasi: <strong>{{ v_code }}</strong></p>
+                <div class="form-group">
+                    <label>Input Kode Validasi</label>
+                    <input type="text" name="v_code_input" required>
+                </div>
+
+                <button type="submit" class="btn-demo-play" style="width: 100%;">DAFTAR SEKARANG</button>
+                <button type="button" class="btn-demo-play" style="width: 100%; margin-top: 8px; background:#222; border-color:#444;" onclick="toggleModal('regModal', false)">BATAL</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="chat-overlay" onclick="toggleChat(false)"></div>
+<div id="chat-popup">
+    <img src="https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/d4805ddd-a241-4990-8466-46b2fd96f85a.jpg" style="width:100%; max-height:140px; object-fit:cover; border-bottom:2px solid #00e5ff; display:block;" alt="Live Chat Banner">
+        <div style="background: linear-gradient(90deg, #0055ff, #00e5ff); padding: 10px 15px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+        <span>👤 HUBUNGI KAMI</span>
+        <span onclick="toggleChat(false)" style="cursor: pointer; font-size: 22px; color: white; line-height: 1;">&times;</span>
+    </div>
+    <div style="padding: 5px 0; background: #0a0f1a;">
+        <a href="https://wa.me/6285724785177" target="_blank" class="chat-row">
+            <span>🟢 WhatsApp</span>
+            <span class="action-btn">CHAT</span>
+        </a>
+        <a href="https://t.me/aldiafnd07" target="_blank" class="chat-row">
+            <span>🔵 Telegram</span>
+            <span class="action-btn">CHAT</span>
+        </a>
+        <a href="https://ig.me/m/aldiafnd_" target="_blank" class="chat-row">
+            <span>📸 Instagram</span>
+            <span class="action-btn">CHAT</span>
+        </a>
+        <a href="https://www.facebook.com/aldi.pehul.12" target="_blank" class="chat-row">
+            <span>🔵 Facebook</span>
+            <span class="action-btn">CHAT</span>
+        </a>
+    </div>
+</div>
+
+    <div class="petir-modal" id="modalPetir">
+        <div class="petir-box">
+            <div class="petir-icon">⚡</div>
+            <div class="petir-text" id="petirPesan">PENDAFTARAN BERHASIL!</div>
+            <button type="button" class="btn-demo-play" onclick="tutupPetir()" style="width: 80%; margin: 0 auto;">OKE</button>
+        </div>
+    </div>
+
+    <a href="/" class="btn-center">MASUK</a>
+    <div class="nav">
+        <a href="/" class="nav-item">🏠<br>HOME</a>
+        <a href="/?action=promo" class="nav-item">🎁<br>PROMO</a>
+        <div style="width:20%"></div>
+        <a href="/?action=download" class="nav-item">📲<br>APK</a>
+        <div class="nav-item" onclick="toggleChat(true)">💬<br>CHAT</div>
+    </div>
+
+    <script>
+        // DAFTAR GAME RTP & DEMO
+        const gamesData = [
+            { brand: "PRAGMATIC", name: "GATES OF OLYMPUS", rtp: "98.5%", img: "https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/31e7f638-ded1-40fe-aaa8-e798ad43797c.jpg", url: "https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20olympgate&lang=id" },
+            { brand: "PG SOFT", name: "MAHJONG WAYS 3+", rtp: "97.8%", img: "https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/365ce84d-8798-4dc5-9899-89631f3ab028.webp", url: "https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20starlight&lang=id" },
+            { brand: "PRAGMATIC", name: "SWEET BONANZA", rtp: "96.5%", img: "https://i.imgur.com/qI9UKNO.jpeg", url: "https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20fruitsw&lang=id" },
+            { brand: "SOFT GAME", name: "BANG GACOR 1000", rtp: "98.1%", img: "https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/14c99f7b-cb7d-4657-a85c-3a6f9c8eeeaf.webp", url: "https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20wildband&lang=id" },
+            { brand: "MICROGAMING", name: "LUCKY TWINS", rtp: "95.9%", img: "https://i.supaimg.com/e2052feb-b9dd-4dac-b762-c0dee9b0bd7b/5b9008d2-f266-4961-843c-82311c3be422.webp", url: "https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20lucky&lang=id" }
+        ];
+
+        const gameContainer = document.getElementById('gameScroll');
+        gamesData.forEach(game => {
+            gameContainer.innerHTML += `
+                <div class="game-card" onclick="bukaGame('${game.url}')">
+                    <div class="brand-label">${game.brand}</div>
+                    <img src="${game.img}" alt="${game.name}">
+                    <div class="game-name">${game.name}</div>
+                    <div class="rtp-label">🔥 RTP ${game.rtp}</div>
+                </div>
+            `;
+        });
+
+        // Banner Slider Otomatis & Manual
+        const slider = document.getElementById('slider');
+        let index = 0;
+        let slideInterval = setInterval(() => {
+            index = (index + 1) % 3;
+            slider.scrollTo({ left: slider.offsetWidth * index, behavior: 'smooth' });
+        }, 3000);
+
+        // Jackpot otomatis bertambah
+        let jpVal = 8715820442;
+        setInterval(() => {
+            jpVal += Math.floor(Math.random() * 250) + 50;
+            document.getElementById('jp-val').innerText = jpVal.toLocaleString('id-ID');
+        }, 400);
+
+        // Auto & Manual Scroll untuk Game List
+        let autoScroll;
+        function startAuto() {
+            autoScroll = setInterval(() => {
+                gameContainer.scrollBy({ left: 142, behavior: 'smooth' });
+                if (gameContainer.scrollLeft + gameContainer.clientWidth >= gameContainer.scrollWidth - 10) {
+                    setTimeout(() => { gameContainer.scrollLeft = 0; }, 800);
+                }
+            }, 3000);
+        }
+        function scrollGameManual(v) {
+            clearInterval(autoScroll);
+            gameContainer.scrollBy({ left: v, behavior: 'smooth' });
+            setTimeout(startAuto, 4000);
+        }
+        startAuto();
+
+        function toggleModal(id, show) {
+            document.getElementById(id).style.display = show ? 'block' : 'none';
+        }
+        function toggleChat(s) {
+            document.getElementById('chat-overlay').style.display = s ? 'block' : 'none';
+            document.getElementById('chat-popup').style.display = s ? 'block' : 'none';
+        }
+        function bukaGame(url) {
+            if(url !== "#") window.location.href = '/play?url=' + encodeURIComponent(url);
+        }
+
+        // =====================================================================
+        // --- HANDLER POPUP PETIR KUSTOM ---
+        // =====================================================================
+        let aksiSetelahSukses = null;
+
+        function tampilkanPetir(pesan, aksi) {
+            document.getElementById('petirPesan').innerHTML = pesan;
+            document.getElementById('modalPetir').style.display = 'block';
+            aksiSetelahSukses = aksi;
+        }
+
+        function tutupPetir() {
+            document.getElementById('modalPetir').style.display = 'none';
+            if (aksiSetelahSukses) {
+                aksiSetelahSukses();
+            }
+        }
+
+        // Handler Submit Login
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const res = await fetch('/login', { method: 'POST', body: new FormData(e.target) });
+            const data = await res.json();
+            
+            if(data.status === 'success') {
+                toggleModal('loginModal', false);
+                tampilkanPetir("⚡ LOGIN BERHASIL!<br><span style='color:#ffea00;'>SELAMAT DATANG KEMBALI</span>", () => {
+                    window.location.reload();
+                });
+            } else {
+                alert(data.message);
+            }
+        };
+
+        // Handler Submit Register
+        document.getElementById('regForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const res = await fetch('/register', { method: 'POST', body: new FormData(e.target) });
+            const data = await res.json();
+            
+            if(data.status === 'success') {
+                toggleModal('regModal', false);
+                tampilkanPetir("⚡ DAFTAR BERHASIL!<br><span style='color:#ffea00;'>AKUN ANDA SUDAH AKTIF</span>", () => {
+                    window.location.reload();
+                });
+            } else {
+                alert(data.message);
+            }
+        };
+
+        // Membaca URL Action Navigasi
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('action') === 'promo') {
+            tampilkanPetir("⚡ BONUS & PROMO SPESIAL HARI INI SEDANG AKTIF!", () => { toggleChat(true); });
+        } else if (urlParams.get('action') === 'download') {
+            tampilkanPetir("⚡ MENGUNDUH APLIKASI APK S2 SEJATISLOT TERBARU...", null);
+        }
+    </script>
+</body>
+</html>
